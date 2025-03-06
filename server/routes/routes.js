@@ -27,8 +27,12 @@ router.get('/learning-entries', getLearningEntries);
 router.post('/learning-entries', createLearningEntry);
 router.delete('/learning-entries/:id', deleteLearningEntry);
 
+;
 const { getGitHubRepos } = require('../controllers/githubController');
-router.get('/github/repos', getGitHubRepos);
+
+router.get('/github/repos', getGitHubRepos); // API route for GitHub repos
+
+
 
 
 // ENTRIES ROUTES

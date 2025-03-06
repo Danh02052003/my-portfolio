@@ -1,5 +1,5 @@
 // components/ProjectCard.js
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 import {
   Brain,
   Globe,
@@ -17,7 +17,7 @@ import {
   GitBranch,
   Monitor,
   Smartphone,
-} from 'lucide-react';
+} from "lucide-react";
 
 const icons = {
   Brain,
@@ -39,30 +39,30 @@ const icons = {
 const ProjectCard = ({ project, index, gradientColors }) => {
   const IconComponent = icons[project.icon] || Codepen; // Fallback to Codepen if icon is missing
   const gradientColor = gradientColors[index % gradientColors.length]; // Cycle through gradient colors
-  const textColor = project.textColor || 'text-gray-900'; // Fallback text color
+  const textColor = project.textColor || "text-gray-900"; // Fallback text color
 
   return (
     <motion.div
       key={project.id || index} // Fallback to index if id is missing
-      initial={{ 
-        opacity: 0, 
+      initial={{
+        opacity: 0,
         x: index % 2 === 0 ? -100 : 100,
-        scale: 0.9
+        scale: 0.9,
       }}
-      animate={{ 
-        opacity: 1, 
+      animate={{
+        opacity: 1,
         x: 0,
-        scale: 1
+        scale: 1,
       }}
-      transition={{ 
-        duration: 0.8, 
+      transition={{
+        duration: 0.8,
         delay: index * 0.3,
         type: "spring",
-        stiffness: 50
+        stiffness: 50,
       }}
-      whileHover={{ 
+      whileHover={{
         scale: 1.05,
-        boxShadow: "0 25px 50px rgba(0,0,0,0.1)"
+        boxShadow: "0 25px 50px rgba(0,0,0,0.1)",
       }}
       className={`
         ${gradientColor}
@@ -81,25 +81,29 @@ const ProjectCard = ({ project, index, gradientColors }) => {
         {/* Project Header */}
         <div className="flex items-center mb-4">
           <div className="mr-6">
-            <IconComponent 
+            <IconComponent
               className={`w-16 h-16 ${textColor} opacity-80`}
-              strokeWidth={1.5} 
+              strokeWidth={1.5}
             />
           </div>
-          <h2 className={`text-4xl font-bold ${textColor}`}>
-            {project.title || 'Untitled Project'}
-          </h2>
+          <div>
+            <h2 className={`text-4xl font-bold ${textColor}`}>
+              {project.title || "Untitled Project"}
+            </h2>
+          </div>
         </div>
-        
+
         {/* Description */}
         <p className={`${textColor} opacity-80 text-xl leading-relaxed`}>
-          {project.description || 'No description provided.'}
+          {project.description === "No description available"
+            ? "No description provided."
+            : project.description}
         </p>
 
         {/* Technologies */}
         <div className="flex flex-wrap gap-2">
           {project.technologies?.map((tech) => (
-            <span 
+            <span
               key={tech}
               className={`
                 px-3 
@@ -124,8 +128,8 @@ const ProjectCard = ({ project, index, gradientColors }) => {
           </h3>
           <ul className="space-y-3">
             {project.features?.map((feature) => (
-              <li 
-                key={feature} 
+              <li
+                key={feature}
                 className={`
                   flex 
                   items-center 
@@ -134,9 +138,9 @@ const ProjectCard = ({ project, index, gradientColors }) => {
                   text-base
                 `}
               >
-                <Codepen 
+                <Codepen
                   className={`w-5 h-5 mr-3 ${textColor} opacity-60`}
-                  strokeWidth={1.5} 
+                  strokeWidth={1.5}
                 />
                 {feature}
               </li>
@@ -145,8 +149,8 @@ const ProjectCard = ({ project, index, gradientColors }) => {
         </div>
 
         {/* Project Link */}
-        <motion.a 
-          href={project.githubUrl || '#'}
+        <motion.a
+          href={project.githubUrl || "#"}
           target="_blank"
           rel="noopener noreferrer"
           whileHover={{ scale: 1.05 }}
@@ -171,7 +175,7 @@ const ProjectCard = ({ project, index, gradientColors }) => {
           `}
         >
           <Rocket className={`w-6 h-6 mr-3 ${textColor}`} strokeWidth={1.5} />
-          {project.githubUrl ? 'View on GitHub' : 'Explore Project'}
+          {project.githubUrl ? "View on GitHub" : "Explore Project"}
         </motion.a>
       </div>
     </motion.div>

@@ -1,4 +1,3 @@
-// pages/Projects.js
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import ProjectsGrid from '../components/ProjectsGrid';
@@ -8,37 +7,21 @@ const Projects = () => {
   const [projects, setProjects] = useState([]);
   const [githubRepos, setGitHubRepos] = useState([]);
 
-  // Fetch projects from MongoDB
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/api/projects');
-        const data = await response.json();
-        setProjects(data);
-      } catch (err) {
-        console.error('Error fetching projects:', err);
-      }
-    };
-
-    fetchProjects();
-  }, []);
-
-  // Fetch GitHub repositories
+  // Fetch GitHub repositories from backend
   useEffect(() => {
     const fetchGitHubRepos = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/github/repos');
+        const response = await fetch('http://localhost:3001/api/github/repos'); // Use backend API
         const data = await response.json();
         setGitHubRepos(data);
       } catch (err) {
-        console.error('Error fetching GitHub repos:', err);
+        console.error("Error fetching GitHub repos:", err);
       }
     };
 
     fetchGitHubRepos();
   }, []);
 
-  // Combine both datasets
   const allProjects = [...projects, ...githubRepos];
 
   return (
@@ -49,14 +32,7 @@ const Projects = () => {
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="
-            text-5xl 
-            md:text-6xl 
-            font-extrabold 
-            text-center 
-            mb-20 
-            text-gray-800
-          "
+          className="text-5xl md:text-6xl font-extrabold text-center mb-20 text-gray-800"
         >
           Technological Frontiers
         </motion.h1>

@@ -1,45 +1,52 @@
-// server/controllers/githubController.js
 const axios = require('axios');
 
 const getGitHubRepos = async (req, res) => {
   try {
-    // Fetch all repositories
+    if (!process.env.GITHUB_TOKEN) {
+      return res.status(500).json({ message: "GitHub token is missing in .env file" });
+    }
+
+    // Fetch repositories
     const reposResponse = await axios.get('https://api.github.com/user/repos', {
       headers: {
-        Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+        Authorization: `token ${process.env.GITHUB_TOKEN}`, // Use 'token' instead of 'Bearer'
       },
     });
 
     // Fetch languages for each repository
     const reposWithLanguages = await Promise.all(
       reposResponse.data.map(async (repo) => {
-        const languagesResponse = await axios.get(repo.languages_url, {
-          headers: {
-            Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
-          },
-        });
+        try {
+          const languagesResponse = await axios.get(repo.languages_url, {
+            headers: {
+              Authorization: `token ${process.env.GITHUB_TOKEN}`,
+            },
+          });
 
-        return {
-          id: repo.id,
-          title: repo.name,
-          description: repo.description || 'No description provided.',
-          technologies: Object.keys(languagesResponse.data), // Get all languages
-          icon: 'Codepen', // Default icon
-          color: 'bg-gradient-to-r from-gray-100 to-gray-200', // Default color
-          textColor: 'text-gray-900', // Default text color
-          features: [
-            `Stars: ${repo.stargazers_count}`,
-            `Forks: ${repo.forks_count}`,
-            `Language: ${repo.language || 'Not specified'}`,
-          ],
-          githubUrl: repo.html_url,
-        };
+          return {
+            id: repo.id,
+            title: repo.name,
+            description: repo.description || 'No description available',
+            technologies: Object.keys(languagesResponse.data), // Get all languages
+            icon: 'Codepen',
+            color: 'bg-gradient-to-r from-gray-100 to-gray-200',
+            textColor: 'text-gray-900',
+            features: [
+              `⭐ Stars: ${repo.stargazers_count}`,
+              `🔄 Forks: ${repo.forks_count}`,
+            ],
+            githubUrl: repo.html_url,
+          };
+        } catch (error) {
+          console.error(`Error fetching languages for ${repo.name}:`, error.message);
+          return null;
+        }
       })
     );
 
-    res.json(reposWithLanguages);
-  } catch (err) {
-    console.error('Error fetching GitHub repos:', err);
+    res.json(reposWithLanguages.filter(Boolean)); // Filter out null results
+  } catch (error) {
+    console.error('Error fetching GitHub repos:', error.message);
     res.status(500).json({ message: 'Failed to fetch GitHub repositories' });
   }
 };
